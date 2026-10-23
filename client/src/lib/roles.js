@@ -1,0 +1,32 @@
+export const ROLE_META = {
+  manager: {
+    title: 'Manager',
+    kicker: 'Run the studio',
+    blurb: 'Clients, deadlines and every cut — one view of the whole slate.',
+    quote: 'Every frame has a reason to exist.',
+    gradient: 'from-[#132C45] via-[#0E1C2C] to-[#0A0E14]',
+    glow: 'rgba(230,228,192,0.18)',
+    demo: { email: 'manager@maykraft.studio', password: 'Manager@123' },
+    numeral: 'I',
+  },
+  client: {
+    title: 'Client',
+    kicker: 'Review your films',
+    blurb: 'Follow progress, watch cuts and approve — feedback straight to your producer.',
+    quote: 'Stories that travel further than the brief.',
+    gradient: 'from-[#3A2433] via-[#1A1520] to-[#0A0E14]',
+    glow: 'rgba(214,170,190,0.18)',
+    demo: { email: 'rohan@chaiwalajunction.in', password: 'Client@123' },
+    numeral: 'II',
+  },
+  editor: {
+    title: 'Editor',
+    kicker: 'Make the cut',
+    blurb: 'Your briefs, footage and deadlines — submit versions and see notes per cut.',
+    quote: 'Quality is a thousand small decisions.',
+    gradient: 'from-[#113634] via-[#0D1E20] to-[#0A0E14]',
+    glow: 'rgba(140,210,195,0.16)',
+    demo: { email: 'kabir@maykraft.studio', password: 'Editor@123' },
+    numeral: 'III',
+  },
+};
