@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const asyncHandler = require('../utils/asyncHandler');
 const { HttpError } = require('../utils/HttpError');
+const ValidationError = require('../utils/ValidationError');
 const { signToken } = require('../middleware/auth');
 
 // POST /api/auth/login
@@ -35,3 +36,16 @@ exports.register = asyncHandler(async (req, res) => {
 
 // GET /api/auth/me
 exports.me = (req, res) => res.status(200).json({ data: req.user.doc.toJSON() });
+
+// PATCH /api/auth/password  { currentPassword, newPassword }
+// Accounts start with a temporary password from the manager, so every user can change it.
+exports.changePassword = asyncHandler(async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const user = await User.findById(req.user.id).select('+passwordHash');
+  // 400, not 401: a wrong current password must not log the user out
+  if (!(await user.checkPassword(currentPassword))) throw new ValidationError('Current password is incorrect');
+  if (currentPassword === newPassword) throw new ValidationError('New password must be different from the current one');
+  user.passwordHash = await User.hashPassword(newPassword);
+  await user.save();
+  return res.status(200).json({ data: { updated: true } });
+});

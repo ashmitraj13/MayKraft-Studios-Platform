@@ -35,4 +35,15 @@ router.post(
 
 router.get('/me', auth, c.me);
 
+router.patch(
+  '/password',
+  authLimiter,
+  auth,
+  validate({
+    currentPassword: { type: 'string', required: true, label: 'Current password' },
+    newPassword: { type: 'password', required: true, label: 'New password' },
+  }),
+  c.changePassword
+);
+
 module.exports = router;

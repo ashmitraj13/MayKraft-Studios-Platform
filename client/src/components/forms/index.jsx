@@ -185,3 +185,42 @@ export function VideoFormModal({ open, onClose, projectId, video, onSaved }) {
     </Modal>
   );
 }
+
+/** Any user: replace the temporary password the studio gave them. */
+export function PasswordModal({ open, onClose }) {
+  const toast = useToast();
+  const f = useForm({ current: '', next: '', confirm: '' });
+  const close = () => { f.setValues({ current: '', next: '', confirm: '' }); f.setErrors({}); onClose(); };
+  const submit = async (e) => {
+    e.preventDefault();
+    const { current, next, confirm } = f.values;
+    const errs = {};
+    if (!current) errs.current = 'Enter your current password';
+    if (next.length < 8) errs.next = 'At least 8 characters';
+    else if (next === current) errs.next = 'Choose a different password';
+    if (confirm !== next) errs.confirm = 'Passwords do not match';
+    f.setErrors(errs);
+    if (Object.keys(errs).length) return;
+    f.setBusy(true);
+    try {
+      await authApi.changePassword(current, next);
+      toast.success('Password updated');
+      close();
+    } catch (err) {
+      if (err.response?.status === 400 && /current/i.test(err.userMessage)) f.setErrors({ current: err.userMessage });
+      else toast.error(err);
+    } finally {
+      f.setBusy(false);
+    }
+  };
+  return (
+    <Modal open={open} onClose={close} title="Change password">
+      <form onSubmit={submit} className="space-y-4" noValidate>
+        <Field label="Current password" error={f.errors.current}>{(id) => <input id={id} type="password" autoComplete="current-password" className="input" {...f.bind('current')} />}</Field>
+        <Field label="New password" error={f.errors.next}>{(id) => <input id={id} type="password" autoComplete="new-password" className="input" {...f.bind('next')} />}</Field>
+        <Field label="Confirm new password" error={f.errors.confirm}>{(id) => <input id={id} type="password" autoComplete="new-password" className="input" {...f.bind('confirm')} />}</Field>
+        <Actions busy={f.busy} onClose={close} label="Update password" />
+      </form>
+    </Modal>
+  );
+}

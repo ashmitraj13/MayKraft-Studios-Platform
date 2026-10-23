@@ -131,3 +131,27 @@ describe('General API behaviour', () => {
     expect(res.body.data.status).toBe('ok');
   });
 });
+
+describe('Change password', () => {
+  test('changes the password; old one stops working', async () => {
+    const { user, password, token } = await makeUser('client');
+    const res = await authed('patch', '/api/auth/password', token).send({ currentPassword: password, newPassword: 'BrandNew123!' });
+    expect(res.status).toBe(200);
+    expect((await api().post('/api/auth/login').send({ email: user.email, password })).status).toBe(401);
+    expect((await api().post('/api/auth/login').send({ email: user.email, password: 'BrandNew123!' })).status).toBe(200);
+  });
+
+  test('wrong current password -> 400 (not 401, so the user stays logged in)', async () => {
+    const { token } = await makeUser('editor');
+    const res = await authed('patch', '/api/auth/password', token).send({ currentPassword: 'wrong-one', newPassword: 'BrandNew123!' });
+    expect(res.status).toBe(400);
+    expect(res.body.message).toBe('Current password is incorrect');
+  });
+
+  test('too short or unchanged -> 400; no token -> 401', async () => {
+    const { password, token } = await makeUser('editor');
+    expect((await authed('patch', '/api/auth/password', token).send({ currentPassword: password, newPassword: 'short' })).status).toBe(400);
+    expect((await authed('patch', '/api/auth/password', token).send({ currentPassword: password, newPassword: password })).status).toBe(400);
+    expect((await api().patch('/api/auth/password').send({ currentPassword: 'a', newPassword: 'BrandNew123!' })).status).toBe(401);
+  });
+});

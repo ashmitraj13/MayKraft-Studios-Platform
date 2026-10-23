@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useRealtime } from '../../context/RealtimeContext';
 import { Avatar } from '../ui';
+import { PasswordModal } from '../forms';
 import { timeAgo } from '../../lib/format';
 
 function useClickOutside(ref, onOutside) {
@@ -17,6 +18,7 @@ export default function TopBar({ onMenu }) {
   const { user, logout } = useAuth();
   const { notifications, markNotificationsRead, clearNotifications, connected } = useRealtime();
   const [open, setOpen] = useState(null); // 'bell' | 'user' | null
+  const [pwOpen, setPwOpen] = useState(false);
   const ref = useRef(null);
   const navigate = useNavigate();
   useClickOutside(ref, () => setOpen(null));
@@ -82,12 +84,16 @@ export default function TopBar({ onMenu }) {
         {open === 'user' && (
           <div className="absolute right-0 mt-2 w-56 overflow-hidden rounded-2xl border border-white/10 bg-ink-800 py-2 shadow-glow animate-fade-up">
             <div className="px-4 py-2 text-xs text-muted break-all">{user?.email}</div>
+            <button className="w-full px-4 py-2.5 text-left text-sm text-cream-soft hover:bg-white/5" onClick={() => { setOpen(null); setPwOpen(true); }}>
+              Change password
+            </button>
             <button className="w-full px-4 py-2.5 text-left text-sm text-cream-soft hover:bg-white/5" onClick={() => { logout(); navigate('/'); }}>
               Sign out
             </button>
           </div>
         )}
       </div>
+      <PasswordModal open={pwOpen} onClose={() => setPwOpen(false)} />
     </header>
   );
 }

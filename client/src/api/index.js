@@ -6,6 +6,7 @@ export const authApi = {
   login: (email, password, role) => http.post('/auth/login', { email, password, role }).then(body),
   me: () => http.get('/auth/me').then(body),
   register: (payload) => http.post('/auth/register', payload).then(body),
+  changePassword: (currentPassword, newPassword) => http.patch('/auth/password', { currentPassword, newPassword }).then(body),
 };
 
 export const peopleApi = {
