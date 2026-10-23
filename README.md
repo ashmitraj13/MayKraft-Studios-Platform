@@ -4,7 +4,7 @@
 
 A production-management platform for a video agency. Managers run every client, project and deadline from one dashboard. Editors get briefs and submit cuts. Clients review and approve their films. Feedback and chat happen in real time.
 
-> **Live app:** https://maykraft-studios.onrender.com · **Repo:** https://github.com/ashmitraj13/MayKraft-Studios-Platform · **Demo video:** _coming soon_
+> **Live app:** https://maykraft-studios.onrender.com · **Repo:** https://github.com/ashmitraj13/MayKraft-Studios-Platform · **Demo video:** [Watch on Google Drive](https://drive.google.com/file/d/1skjYldIBuSGxMV3uGYtm3ciZd57HOMO3/view?usp=sharing)
 >
 > Hosted on Render's free plan: the first visit after it has been idle can take 30–50 seconds to wake up. Demo logins are on each login page ("click to fill").
 
