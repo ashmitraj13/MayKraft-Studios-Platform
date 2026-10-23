@@ -1,14 +1,15 @@
-# Render Blueprint: deploys the API from /server
+# Render Blueprint: one web service hosts the API, Socket.io and the built React app.
 services:
   - type: web
-    name: maykraft-api
+    name: maykraft-studios
     runtime: node
-    rootDir: server
     plan: free
-    buildCommand: npm ci
-    startCommand: npm start
+    buildCommand: npm ci --prefix server && npm ci --prefix client --include=dev && npm run build --prefix client
+    startCommand: npm start --prefix server
     healthCheckPath: /api/health
     envVars:
+      - key: NODE_VERSION
+        value: "22"
       - key: NODE_ENV
         value: production
       - key: MONGO_URI
@@ -19,3 +20,5 @@ services:
         value: 7d
       - key: CLIENT_URL
         sync: false
+      - key: VITE_SHOW_DEMO
+        value: "true"
